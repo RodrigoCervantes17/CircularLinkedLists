@@ -44,10 +44,17 @@
         aux=aux.siguiente
       }
       lista += aux.infoHTML();
-      console.log(lista);
+      return lista;
 
     }
-    buscar() {}
+    buscar(nombre) {
+      let aux = this.primero
+      while (aux !== null){
+        if (aux.nombre == nombre) return aux
+        aux = aux.siguiente
+      }
+      return null;
+    }
     eliminar() {}
     listarInverso() {}
     agregarInicio() {}
