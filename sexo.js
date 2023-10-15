@@ -1,9 +1,18 @@
+
 class Bus {
   constructor(nombre, minutos) {
     this.siguiente = null;
     this.anterior = null;
     this.nombre = nombre;
     this.minutos = minutos;
+  }
+  infoHTML() {
+    return `
+        <div class="producto">
+            <h1>${this.nombre}</h1>
+            <p>${this.minutos}</p>
+        </div>
+        `;
   }
 }
 
@@ -27,7 +36,17 @@ class Ruta {
     this.primero.anterior = nuevo;
     }
   }
-  listar() {}
+  listar() {
+    let lista=""
+    let aux = this.primero
+    while(aux.siguiente!==this.primero){
+      lista += aux.infoHTML()
+      aux=aux.siguiente
+    }
+    lista += aux.infoHTML();
+    return lista;
+
+  }
   buscar() {}
   eliminar() {}
   listarInverso() {}
