@@ -7,7 +7,7 @@ class Base {
   }
   infoHTML() {
     return `
-        <div class="bus">
+        <div class="base">
             <h1>${this.nombre}</h1>
             <p>${this.minutos}</p>
         </div>
@@ -131,9 +131,9 @@ class Ruta {
       let horaStr = horaActual < 10 ? `0${horaActual}` : horaActual;
       let minutosStr = minutos < 10 ? `0${minutos}` : minutos;
 
-      rutaRecorrida += `Hora: ${horaStr}:${minutosStr} - Base: ${rutaActual.nombre}\n`;
+      rutaRecorrida += `Hora: ${horaStr}:${minutosStr} - Base: ${rutaActual.nombre}\n `;
 
-      minutos += rutaActual.minutos;
+      minutos += rutaActual.siguiente.minutos;
       while (minutos >= 60) {
         horaActual++;
         minutos -= 60;
@@ -158,50 +158,3 @@ rutaNueva.agregar(ruta15)
 rutaNueva.agregar(ruta16)
 
 */
-
-const rutaNueva = new Ruta();
-const avisos = document.getElementById("avisos");
-
-function mostrarAviso(mensaje) {
-  avisos.innerHTML = mensaje;
-}
-
-function agregarBus() {
-  const nombre = document.getElementById("nombreBus").value;
-  const minutos = parseInt(document.getElementById("minutosBus").value, 10);
-  
-  if (nombre && minutos) {
-    const nuevoBus = new Base(nombre, minutos);
-    rutaNueva.agregar(nuevoBus);
-    document.getElementById("nombreBus").value = "";
-    document.getElementById("minutosBus").value = "";
-    mostrarAviso("");
-  } else {
-    mostrarAviso("Ingresa un nombre y minutos válidos para el bus.");
-  }
-}
-
-function eliminarBus() {
-  const nombre = document.getElementById("nombreEliminar").value;
-  
-  if (nombre) {
-    rutaNueva.eliminar(nombre);
-    document.getElementById("nombreEliminar").value = "";
-    mostrarAviso("");
-  } else {
-    mostrarAviso("Ingresa un nombre válido para eliminar el bus.");
-  }
-}
-
-function listarBuses() {
-  const resultado = document.getElementById("resultado");
-  resultado.innerHTML = rutaNueva.listar();
-  mostrarAviso("");
-}
-
-function listarInversoBuses() {
-  const resultado = document.getElementById("resultado");
-  resultado.innerHTML = rutaNueva.listarInverso();
-  mostrarAviso("");
-}
-
