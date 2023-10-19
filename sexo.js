@@ -1,4 +1,4 @@
-class Bus {
+class Base {
   constructor(nombre, minutos) {
     this.siguiente = null;
     this.anterior = null;
@@ -69,24 +69,139 @@ class Ruta {
       return;
     }
 
-    let bus = this.buscar(nombre);
-    if (bus == null) {
+    let base = this.buscar(nombre);
+    if (base == null) {
       return; // Caso 3: el bus buscado no se encontró
     }
 
-    if (bus === this.primero) {
+    if (base == this.primero) {
       this.primero = this.primero.siguiente; // Caso 4: bus a borrar es el primero
     }
 
-    bus.anterior.siguiente = bus.siguiente; // Caso 5: bus en el medio, cambiamos enlaces
-    bus.siguiente.anterior = bus.anterior;
+    base.anterior.siguiente = base.siguiente; // Caso 5: bus en el medio, cambiamos enlaces
+    base.siguiente.anterior = base.anterior;
 
-    if (bus === this.primero.anterior) {
-      this.primero.anterior = bus.anterior; // Caso 6: bus a borrar es el "último"
+    if (base === this.primero.anterior) {
+      this.primero.anterior = base.anterior; // Caso 6: bus a borrar es el "último"
     }
   }
   //Si hay algún caso que me haya faltado, o hay alguno redundante, háganmelo saber en un commit :D
-  listarInverso() {}
-  agregarInicio() {}
-  crearRuta(baseInicio, horaInicio, horaFin) {}
+  listarInverso() {
+    if (this.primero == null) {
+      return "";
+    } else {
+      return this._listarInversoRec(this.primero);
+    }
+  }
+
+  _listarInversoRec(nodoX, info = "") {
+    if (nodoX) {
+      info = this._listarInversoRec(nodoX.siguiente, info);
+      info += nodoX.infoHTML();
+    }
+    return info;
+  }
+
+  agregarInicio(nuevo) {
+    if (this.primero != null) {
+      let aux = this.primero.anterior;
+      nuevo.siguiente = this.primero;
+      nuevo.anterior = aux;
+      this.primero.anterior = nuevo;
+      aux.siguiente = nuevo;
+      this.primero = nuevo;
+    } else {
+      this.primero = nuevo;
+      this.primero.anterior = nuevo;
+      this.primero.siguiente = nuevo;
+    }
+  }
+
+  crearRuta(baseInicio, horaInicio, horaFin) {
+    if (baseInicio === null || horaInicio < 0 || horaFin <= horaInicio) {
+      return "Parámetros inválidos";
+    }
+
+    let rutaActual = baseInicio;
+    let horaActual = horaInicio;
+    let minutos = 0;
+    let rutaRecorrida = "";
+
+    while (horaActual < horaFin || (horaActual === horaFin && minutos === 0)) {
+      let horaStr = horaActual < 10 ? `0${horaActual}` : horaActual;
+      let minutosStr = minutos < 10 ? `0${minutos}` : minutos;
+
+      rutaRecorrida += `Hora: ${horaStr}:${minutosStr} - Base: ${rutaActual.nombre}\n`;
+
+      minutos += rutaActual.minutos;
+      while (minutos >= 60) {
+        horaActual++;
+        minutos -= 60;
+      }
+      rutaActual = rutaActual.siguiente;
+      if (rutaActual === this.primero) {
+        rutaActual = this.primero;
+      }
+    }
+
+    return(rutaRecorrida);
+  }
 }
+
+/* 
+let rutaNueva = new Ruta
+let ruta14 = new Base("14",60)
+let ruta15 = new Base("15",40)
+let ruta16 = new Base("16",35)
+rutaNueva.agregar(ruta14)
+rutaNueva.agregar(ruta15)
+rutaNueva.agregar(ruta16)
+
+*/
+
+const rutaNueva = new Ruta();
+const avisos = document.getElementById("avisos");
+
+function mostrarAviso(mensaje) {
+  avisos.innerHTML = mensaje;
+}
+
+function agregarBus() {
+  const nombre = document.getElementById("nombreBus").value;
+  const minutos = parseInt(document.getElementById("minutosBus").value, 10);
+  
+  if (nombre && minutos) {
+    const nuevoBus = new Base(nombre, minutos);
+    rutaNueva.agregar(nuevoBus);
+    document.getElementById("nombreBus").value = "";
+    document.getElementById("minutosBus").value = "";
+    mostrarAviso("");
+  } else {
+    mostrarAviso("Ingresa un nombre y minutos válidos para el bus.");
+  }
+}
+
+function eliminarBus() {
+  const nombre = document.getElementById("nombreEliminar").value;
+  
+  if (nombre) {
+    rutaNueva.eliminar(nombre);
+    document.getElementById("nombreEliminar").value = "";
+    mostrarAviso("");
+  } else {
+    mostrarAviso("Ingresa un nombre válido para eliminar el bus.");
+  }
+}
+
+function listarBuses() {
+  const resultado = document.getElementById("resultado");
+  resultado.innerHTML = rutaNueva.listar();
+  mostrarAviso("");
+}
+
+function listarInversoBuses() {
+  const resultado = document.getElementById("resultado");
+  resultado.innerHTML = rutaNueva.listarInverso();
+  mostrarAviso("");
+}
+
