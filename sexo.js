@@ -87,19 +87,14 @@ class Ruta {
   }
   //Si hay algún caso que me haya faltado, o hay alguno redundante, háganmelo saber en un commit :D
   listarInverso() {
-    if (this.primero == null) {
-      return "";
-    } else {
-      return this._listarInversoRec(this.primero);
+    let aux = this.primero
+    let listaInversa = ""
+    while (aux.anterior !== this.primero){
+      listaInversa += aux.infoHTML()
+      aux = aux.anterior  
     }
-  }
-
-  _listarInversoRec(nodoX, info = "") {
-    if (nodoX) {
-      info = this._listarInversoRec(nodoX.siguiente, info);
-      info += nodoX.infoHTML();
-    }
-    return info;
+    listaInversa += aux.infoHTML()
+    return listaInversa
   }
 
   agregarInicio(nuevo) {
@@ -144,7 +139,7 @@ class Ruta {
       }
     }
 
-    return(rutaRecorrida);
+    return rutaRecorrida;
   }
 }
 
