@@ -50,12 +50,16 @@ class Ruta {
 
   buscar(nombre) {
     let aux = this.primero;
+    let inicial = aux;
+  
     while (aux !== null) {
       if (aux.nombre == nombre) return aux;
       aux = aux.siguiente;
+      if (aux === inicial) break;
     }
     return null;
   }
+  
 
   eliminar(nombre) {
     if (this.primero === null) {
@@ -87,14 +91,14 @@ class Ruta {
   }
   //Si hay algún caso que me haya faltado, o hay alguno redundante, háganmelo saber en un commit :D
   listarInverso() {
-    let aux = this.primero
-    let listaInversa = ""
-    while (aux.anterior !== this.primero){
-      listaInversa += aux.infoHTML()
-      aux = aux.anterior  
+    let aux = this.primero;
+    let listaInversa = "";
+    while (aux.anterior !== this.primero) {
+      listaInversa += aux.infoHTML();
+      aux = aux.anterior;
     }
-    listaInversa += aux.infoHTML()
-    return listaInversa
+    listaInversa += aux.infoHTML();
+    return listaInversa;
   }
 
   agregarInicio(nuevo) {
@@ -113,7 +117,7 @@ class Ruta {
   }
 
   crearRuta(baseInicio, horaInicio, horaFin) {
-    if (baseInicio === null || horaInicio < 0 || horaFin <= horaInicio) {
+    if (baseInicio == null || horaInicio < 0 || horaFin <= horaInicio) {
       return "Parámetros inválidos";
     }
 
@@ -122,7 +126,7 @@ class Ruta {
     let minutos = 0;
     let rutaRecorrida = "";
 
-    while (horaActual < horaFin || (horaActual === horaFin && minutos === 0)) {
+    while (horaActual < horaFin || (horaActual == horaFin && minutos == 0)) {
       let horaStr = horaActual < 10 ? `0${horaActual}` : horaActual;
       let minutosStr = minutos < 10 ? `0${minutos}` : minutos;
 
